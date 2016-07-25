@@ -143,7 +143,7 @@
                        "recipe_contract" 
                        "Contract and Purpose Statement"
                        "Every contract has three parts ..."
-                       (make-spacer ";")
+                       (make-spacer "#")
                        (make-wrapper
                         (dr-student-answer #:id? #f "recipe_name" #:show? show-funname-contract? funname)
                         (para #:style (bootstrap-span-style "") ":")
@@ -151,7 +151,7 @@
                         (para #:style (bootstrap-span-style "") htmlRarr)
                         (dr-student-answer "recipe_range" #:show? show-range? range))
                        (make-clear)
-                       (make-spacer ";")
+                       (make-spacer "#")
                        (make-wrapper
                         (dr-student-answer "recipe_purpose" #:show? show-purpose? (string-append " " purpose))))
                       ;; need one of these for each example provided/expected
@@ -159,57 +159,62 @@
                         "recipe_examples"
                         "Examples"
                         "Write some examples, then circle and label what changes ..."
-                        (let ([example-elts
-                               (if (cons? buggy-example-list)
-                                   (map (lambda (e)
-                                          (dr-example (first e) (rest e)
-                                                      #:show-funname? #t
-                                                      #:show-input? #t
-                                                      #:show-output? #t))
-                                        buggy-example-list)
-                                   ;; otherwise generate good examples
-                                   (let ([num-blank-examples (- num-examples (length example-list))])
-                                     (append 
-                                      ; generate contents of example-list according to show-examples
-                                      (map (lambda (e s) 
-                                             ; e is either empty or a two-element list of input and output
-                                             ; s is either a boolean or a three-element list of booleans
-                                             ;   indicating whether to show the funname/input/output
-                                             (dr-example funname e
-                                                         #:show-funname? (show-example-component? s 'funname)
-                                                         #:show-input? (show-example-component? s 'input)
-                                                         #:show-output? (show-example-component? s 'output))) 
-                                           example-list
-                                           ; pad show-examples to match length of example-list
-                                           ; padding value of #f means default is to not show example
-                                           (append show-examples
-                                                   (build-list (- (length example-list) (length show-examples))
-                                                               (lambda (i) #f))))
-                                      ; pad example list with empty examples to get to specified num-examples
-                                      (build-list num-blank-examples (lambda (i) (dr-example funname '()))))
-                                     ))])
-                          ; insert clear-breaks between examples and merge the example content lists
-                          (foldr (lambda (e res-rest) (append (cons (make-clear) e) res-rest))
-                                 '() example-elts))
+                        (list
+                          (make-spacer "examples:")
+                          (let ([example-elts
+                                 (if (cons? buggy-example-list)
+                                     (map (lambda (e)
+                                            (dr-example (first e) (rest e)
+                                                        #:show-funname? #t
+                                                        #:show-input? #t
+                                                        #:show-output? #t))
+                                          buggy-example-list)
+                                     ;; otherwise generate good examples
+                                     (let ([num-blank-examples (- num-examples (length example-list))])
+                                       (append 
+                                        ; generate contents of example-list according to show-examples
+                                        (map (lambda (e s) 
+                                               ; e is either empty or a two-element list of input and output
+                                               ; s is either a boolean or a three-element list of booleans
+                                               ;   indicating whether to show the funname/input/output
+                                               (dr-example funname e
+                                                           #:show-funname? (show-example-component? s 'funname)
+                                                           #:show-input? (show-example-component? s 'input)
+                                                           #:show-output? (show-example-component? s 'output))) 
+                                             example-list
+                                             ; pad show-examples to match length of example-list
+                                             ; padding value of #f means default is to not show example
+                                             (append show-examples
+                                                     (build-list (- (length example-list) (length show-examples))
+                                                                 (lambda (i) #f))))
+                                        ; pad example list with empty examples to get to specified num-examples
+                                        (build-list num-blank-examples (lambda (i) (dr-example funname '()))))
+                                       ))])
+                            ; insert clear-breaks between examples and merge the example content lists
+                            (foldr (lambda (e res-rest) (append (cons (make-clear) e) res-rest))
+                                   '() example-elts))
+
+                          (linebreak)
+                          (make-spacer "end"))
                         )
                       (design-recipe-section 
                        "recipe_definition"
                        "Definition"
                        "Write the definition, giving variable names to all your input values ..."
-                       (make-spacer "(define ")
+                       (make-spacer "fun ")
+                       (dr-student-answer #:id? #f "recipe_name" #:show? show-funname-defn? (or buggy-funname-defn funname))
                        (make-spacer "(")
+                       (dr-student-answer "recipe_variables" #:show? show-params? (string-join param-list ", "))
+                       (make-spacer "):")
+                       (make-clear)  
                        (make-wrapper
-                        (dr-student-answer #:id? #f "recipe_name" #:show? show-funname-defn? (or buggy-funname-defn funname))
-                        (dr-student-answer "recipe_variables" #:show? show-params? (string-join param-list " "))
-                        (make-spacer ")")
-                        (make-clear)  
                         (dr-body body #:show show-body?)
                         ;; CSS generates closing ) for cond, so only gen in other cases
-                        (if (cond-body? body) "" (make-spacer ")"))
+                        (if (cond-body? body) "" (list (make-spacer "end")))
                         ))
                       )))))))
 
-(define (cond-body? e) (and (list? e) (eq? (first e) 'cond)))
+(define (cond-body? e) (and (list? e) (eq? (first e) 'ask)))
 
 (define (atom? v) (not (list? v)))
 
@@ -218,15 +223,16 @@
   (if body
       (let ([body-contents body]) ;(if (string? body) (with-input-from-string body read) body)])
         (cond [(atom? body-contents) (dr-student-answer "recipe_definition_body" #:show? show body)]
-              [(eq? (first body-contents) 'cond) 
+              [(eq? (first body-contents) 'ask) 
                (let ([clauselines (map (lambda (c s) 
                                          (list 
                                           (make-clear)
-                                          (make-spacer "[")
+                                          (make-spacer "|")
                                           (make-wrapper #:extra-class "clause"
                                                         (dr-student-answer "questions" (first c) 
                                                                            #:id? #f #:show? (if (list? s) (first s) s)
                                                                            #:fmt-quotes? #t)
+                                                        (make-spacer "then:")
                                                         (dr-student-answer "answers" (second c) 
                                                                            #:id? #f #:show? (if (list? s) (second s) s)
                                                                            #:fmt-quotes? #t)
@@ -240,7 +246,7 @@
                  (interleave-parbreaks/all
                   (list (make-spacer "(")
                         (apply make-wrapper
-                        (append (list (dr-student-answer "cond" #:show? show (first body-contents)))
+                        (append (list (dr-student-answer "ask:" #:show? show (first body-contents)))
                                 (apply append clauselines))
                         #:extra-class "cond"))))]
               [else ;; assume single-line expression for now
@@ -301,12 +307,12 @@
   (let ([input (if (empty? in-out-list) "" (list->spaced-string (all-but-last in-out-list)))]
         [output (if (empty? in-out-list) "" (format-exercise-text (last in-out-list)))])
     (interleave-parbreaks/all
-     (list (make-spacer "(EXAMPLE ")
-           (make-spacer "(")
-           (make-wrapper
+     (list (make-wrapper
             (dr-student-answer #:id? #f "recipe_name" #:show? show-funname? funname)
+            (make-spacer "(")
             (dr-student-answer #:id? #f "recipe_example_inputs" #:show? show-input? input)
             (make-spacer ")")
+            (make-spacer " is ")
             ;(make-clear) ; only force this for long-form DR (maybe via a flag?)
             (dr-student-answer #:id? #f "recipe_example_body"#:show? show-output? output)
             ;(make-spacer ")")
