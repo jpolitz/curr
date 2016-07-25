@@ -9,11 +9,11 @@
                          #:show-examples '((#t #t #f) #f #f #f)
                          #:param-list (list "topping")
                          #:show-params? #f
-                         #:body '(cond [(string=? "pepperoni" topping) 10.5]
-                                       [(string=? "cheese" topping) 9]
-                                       [(string=? "chicken" topping) 11.25]
-                                       [(string=? "broccoli" topping) 10.25]
-                                       [else 1000000])
+                         #:body '(ask [(string-equal("pepperoni", topping)) 10.5]
+                                      [(string-equal("cheese", topping)) 9]
+                                      [(string-equal("chicken", topping)) 11.25]
+                                      [(string-equal("broccoli", topping)) 10.25]
+                                      [else 1000000])
                          #:show-body? '(cond (#f #f) #f #f #f #f)
                          #:grid-lines? #t
                          )
