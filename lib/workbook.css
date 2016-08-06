@@ -30,7 +30,7 @@ html, body{background: white; width: 7.5in; position: absolute;}
     display:        inline-block; 
     vertical-align: top;
 }
-.designRecipeLayout .wrapper .wrapper{ width: 98%;}
+.designRecipeLayout .wrapper .wrapper{ width: 94%;}
 
 .wrapper::after{
   text-align:       right;
@@ -64,6 +64,7 @@ html, body{background: white; width: 7.5in; position: absolute;}
     background:     inherit;
     color:          black;
     line-height:    20pt;
+    white-space:    pre;
 }
 /* a spacer inside a .studentAnswer is used for close parens
   make sure the left-margin is slightly less than the min-width 
@@ -79,6 +80,12 @@ html, body{background: white; width: 7.5in; position: absolute;}
 
 /* When one spacer follows another, there is no need for padding */
 .designRecipeLayout .spacer+.spacer{padding: 0pt;}
+
+.designRecipeLayout .indent{
+width:2em;
+display:inline-block;
+white-space: pre;
+}
 
 .designRecipeLayout .studentAnswer{
   margin-bottom:  20pt;
@@ -123,8 +130,12 @@ html, body{background: white; width: 7.5in; position: absolute;}
 .recipe_example_inputs::after {color:black; content: "input(s)";}
 .recipe_example_inputs::after {color:black; content: "input(s)";}
 #recipe_definition_body::after{color:black; content: "what the function does with those variables";}
-.designRecipeLayout .recipe_example_body{min-width: 220pt; max-width: 95%; display: inline-block;}
-#recipe_definition_body{min-width: 440pt; max-width: 95%;}
+.designRecipeLayout .recipe_example_body{min-width: 150pt; max-width: 95%; display: inline-block;}
+#recipe_definition_body{margin-left: 2em; min-width: 440pt; max-width: 95%;}
+
+#recipe_definition{
+  page-break-inside: avoid;
+}
 
 .recipe_example_body{margin-left: 20px;}
 
@@ -136,9 +147,11 @@ html, body{background: white; width: 7.5in; position: absolute;}
 .cond .clause .questions{text-align: left;}
 .designRecipeLayout .questions{border-right: solid 10pt white; z-index: 2; min-width: 45%;}
 
+/*
 #recipe_examples .wrapper::after {content: ")";}
 .clause::after { content: "]"; }
 .cond>.clause:last-of-type::after{content: "]))"; right: 0pt}
+*/
 
 /* Copyright at the end of the file */
 .BootstrapCopyright img{ float:right; }

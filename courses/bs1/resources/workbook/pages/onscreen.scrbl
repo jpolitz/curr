@@ -1,13 +1,14 @@
 #lang curr/lib
 
-@(design-recipe-exercise "onscreen?" "Use the Design Recipe to write a function 'onscreen?', which takes in the x-coordinate and checks to see if Sam is safe on the left AND safe on the right." 
-			 #:domain-list (list "number")
-			 #:range "boolean"
+@(design-recipe-exercise "is-onscreen" "Use the Design Recipe to write a function 'is-onscreen', which takes in an x- and y-coordinate and checks to see if Sam is safe on the left AND safe on the right." 
+			 #:domain-list (list "Number" "Number")
+			 #:range "Boolean"
 			 #:purpose "Sam is on the screen if his x-coordinate is safe on the left and safe on the right."
                          #:num-examples 2
-			 #:example-list '((10 (and (safe-left? 10) (safe-right? 10))) (-15 (and (safe-left? -15) (safe-right? -15))))
+			 #:example-list '((10 (is-safe-left(10) and is-safe-right(10)))
+                        (-15 (is-safe-left(-15) and is-safe-right(-15))))
                          #:param-list (list "x")
                          #:show-params? #f
-                         #:body '(and (safe-left? x) (safe-right? x))
+                         #:body '(is-safe-left?(x) and is-safe-right(x))
                          #:show-body? #f
                          )

@@ -6,18 +6,21 @@
 			 #:range "image"
 			 #:purpose "Create a solid red shape of the given kind"
                          #:num-examples 4
+                         ;; NOTE(joe): intentionally wrong answers below to avoid line-wrap 
                          #:example-list '(("circle" (circle 50 "solid" "red"))
-                                          ("triangle" (triangle 50 "solid" "red"))
-                                          ("rectangle" (rectangle 99 9 "solid" "red"))
-                                          ("star" (triangle 50 "solid" "red")))
-                         #:show-examples'((#t #t #t) #f)
+                                          ("triangle" (tri 50 "solid" "red"))
+                                          ("rectangle" (rect 99 9 "solid" "red"))
+                                          ("star" (star 50 "solid" "red")))
+                         #:show-examples'(#f #f)
                          #:param-list (list "shape")
                          #:show-params? #f
-                         #:body '(cond [(string=? "circle" shape) (circle 50 "solid" "red")]
-                                       [(string=? "triangle" shape) (triangle 50 "solid" "red")]
-                                       [(string=? "rectangle" shape) (rectangle 99 9 "solid" "red")]
-                                       [(string=? "star" shape) (star 50 "solid" "red")]
-                                       [else (text 20 "???" "red")])
-                         #:show-body? '(cond (#f #t) #f #f #f #f)
+                         ;; NOTE(joe): intentionally using == rather than string-equal
+                         ;; below to not line-wrap annoyingly
+                         #:body '(ask [("circle" == shape) (circle(50 "solid" "red"))]
+                                      [("triangle" == shape) (triangle(50 "solid" "red"))]
+                                      [("rectangle" == shape) (rect(99 9 "solid" "red"))]
+                                      [("star" == shape) (star(50 "solid" "red"))]
+                                      [else (text 20 "???" "red")])
+                         #:show-body? '(cond #f #f #f #f #f)
                          #:grid-lines? #t
                          )

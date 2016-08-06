@@ -210,7 +210,7 @@
                        (make-wrapper
                         (dr-body body #:show show-body?)
                         ;; CSS generates closing ) for cond, so only gen in other cases
-                        (if (cond-body? body) "" (list (make-spacer "end")))
+                        (list (make-clear) (make-spacer "end"))
                         ))
                       )))))))
 
@@ -222,12 +222,15 @@
 (define (dr-body body #:show (show #f))
   (if body
       (let ([body-contents body]) ;(if (string? body) (with-input-from-string body read) body)])
-        (cond [(atom? body-contents) (dr-student-answer "recipe_definition_body" #:show? show body)]
+        (cond [(atom? body-contents)
+               (list
+                (make-indent)
+                (dr-student-answer "recipe_definition_body" #:show? show body))]
               [(eq? (first body-contents) 'ask) 
                (let ([clauselines (map (lambda (c s) 
                                          (list 
                                           (make-clear)
-                                          (make-spacer "|")
+                                          (make-spacer "  |")
                                           (make-wrapper #:extra-class "clause"
                                                         (dr-student-answer "questions" (first c) 
                                                                            #:id? #f #:show? (if (list? s) (first s) s)
@@ -244,13 +247,16 @@
                                            (build-list (length (rest body-contents)) (lambda (i) show)))
                                        )])
                  (interleave-parbreaks/all
-                  (list (make-spacer "(")
-                        (apply make-wrapper
-                        (append (list (dr-student-answer "ask:" #:show? show (first body-contents)))
-                                (apply append clauselines))
+                  (list 
+                      (apply make-wrapper
+                        (append (list (make-spacer "  ask:"))
+                                (apply append clauselines)
+                                (list (make-spacer "  end"))
+                                )
                         #:extra-class "cond"))))]
               [else ;; assume single-line expression for now
-               (dr-student-answer "recipe_definition_body" #:show? show body #:fmt-quotes? #t)]))
+               (list
+                (dr-student-answer "recipe_definition_body" #:show? show body #:fmt-quotes? #t))]))
       ;; eventually, this should become a warning about the body missing
       (dr-student-answer "recipe_definition_body" #:show? show body)))
 
@@ -264,6 +270,9 @@
 (define (make-wrapper #:extra-class (extra-class "") . contents)
   (nested #:style (bootstrap-div-style (string-append "wrapper" " " extra-class))
           (interleave-parbreaks/all contents))) 
+
+(define (make-indent)
+  (para #:style (bootstrap-span-style "indent") "  "))
 
 (define (make-spacer contents)
   (para #:style (bootstrap-span-style "spacer") contents))
@@ -294,6 +303,8 @@
 (define (list->spaced-string L)
   (string-join (map format-exercise-text L)))
   ;(apply string-append (map (lambda (e) (format-exercise-text e)) L)))
+(define (list->comma-string L)
+  (string-join (map format-exercise-text L) ", "))
 
 ;; generate an example within a design recipe activity
 ;; in-out-list is either empty or a list with the input and output expressions
@@ -304,19 +315,20 @@
                     #:show-input? (show-input? #f)
                     #:show-output? (show-output? #f)
                     )
-  (let ([input (if (empty? in-out-list) "" (list->spaced-string (all-but-last in-out-list)))]
+  (let ([input (if (empty? in-out-list) "" (list->comma-string (all-but-last in-out-list)))]
         [output (if (empty? in-out-list) "" (format-exercise-text (last in-out-list)))])
     (interleave-parbreaks/all
      (list (make-wrapper
+            (make-indent)
             (dr-student-answer #:id? #f "recipe_name" #:show? show-funname? funname)
             (make-spacer "(")
             (dr-student-answer #:id? #f "recipe_example_inputs" #:show? show-input? input)
             (make-spacer ")")
-            (make-spacer " is ")
+            (make-spacer " is")
             ;(make-clear) ; only force this for long-form DR (maybe via a flag?)
-            (dr-student-answer #:id? #f "recipe_example_body"#:show? show-output? output)
-            ;(make-spacer ")")
-            ))))) 
+            (dr-student-answer #:id? #f "recipe_example_body"#:show? show-output? output))
+              ;(make-spacer ")")
+            ))))
 
 ;; extra-answer allows us to put the closing paren spacer into the answer field
 (define (dr-student-answer class-or-id answer 

@@ -1,13 +1,14 @@
 #lang curr/lib
 
-@(design-recipe-exercise "safe-left?" "Use the Design Recipe to write a function 'safe-left?', which takes in an x-coordinate and checks to see if it is greater than -50" 
-			 #:domain-list (list "number")
-			 #:range "boolean"
+@(design-recipe-exercise "is-safe-left" "Use the Design Recipe to write a function 'is-safe-left', which takes in an x-coordinate and a y-coordinate and checks to see if the x-coordinate is greater than -50" 
+			 #:domain-list (list "Number" "Number")
+			 #:range "Boolean"
 			 #:purpose "Determine whether given number is greater than -50"
                          #:num-examples 2
-			 #:example-list '((25 (> 25 -50)) (-51 (> -51 -50)))
-                         #:param-list (list "x")
+			 #:example-list '((25 (25 > -50))
+                        (-51 (-51 > -50)))
+                         #:param-list (list "x" "y")
                          #:show-params? #f
-                         #:body '(> x -50)
+                         #:body '(x > -50)
                          #:show-body? #f
                          )
