@@ -231,16 +231,22 @@
                                          (list 
                                           (make-clear)
                                           (make-spacer "  |")
-                                          (make-wrapper #:extra-class "clause"
-                                                        (dr-student-answer "questions" (first c) 
-                                                                           #:id? #f #:show? (if (list? s) (first s) s)
-                                                                           #:fmt-quotes? #t)
-                                                        (make-spacer "then:")
-                                                        (dr-student-answer "answers" (second c) 
-                                                                           #:id? #f #:show? (if (list? s) (second s) s)
-                                                                           #:fmt-quotes? #t)
-                                                        ;(make-spacer "]")
-                                                        )))
+                                          (if (eq? (first c) 'otherwise)
+                                            (make-wrapper #:extra-class "clause"
+                                                          (make-spacer " otherwise:")
+                                                          (dr-student-answer "answers" (second c) 
+                                                                             #:id? #f #:show? (if (list? s) (second s) s)
+                                                                             #:fmt-quotes? #t))
+                                            (make-wrapper #:extra-class "clause"
+                                                          (dr-student-answer "questions" (first c) 
+                                                                             #:id? #f #:show? (if (list? s) (first s) s)
+                                                                             #:fmt-quotes? #t)
+                                                          (make-spacer "then:")
+                                                          (dr-student-answer "answers" (second c) 
+                                                                             #:id? #f #:show? (if (list? s) (second s) s)
+                                                                             #:fmt-quotes? #t)
+                                                          ;(make-spacer "]")
+                                                          ))))
                                        (rest body-contents) 
                                        ; show is either a single boolean or a list of specs with same length as number of clauses
                                        (if (list? show) (rest show)

@@ -1,6 +1,6 @@
 #lang curr/lib
 
-@(design-recipe-exercise "distance" (list "Write a function distance, which takes FOUR inputs:"
+@(design-recipe-exercise "distance" (list "Write a function \"distance\", which takes FOUR inputs:"
 @(itemlist @(item "px: The x-coordinate of the player")
            @(item "py: The y-coordinate of the player")
            @(item "cx: the x-coordinate of another game character")
