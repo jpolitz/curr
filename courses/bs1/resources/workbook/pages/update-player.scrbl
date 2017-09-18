@@ -9,9 +9,9 @@
                          #:show-examples '((#t #t #f) (#t #t #f))
                          #:param-list (list "y" "key")
                          #:show-params? #f
-                         #:body '(cond [(string=? "up" key) (+ y 20)]
-                                       [(string=? "down" key) (- y 20)]
-                                       [else y])
-                         #:show-body? #f
+                         #:body '(ask [(string-equal("up" key)) (+ y 20)]
+                                      [(string-equal("down" key)) (- y 20)]
+                                      [otherwise y])
+                         #:show-body? '(cond #f #f (#f #f))
                          #:grid-lines? #t
                          )

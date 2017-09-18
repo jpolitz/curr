@@ -13,7 +13,7 @@
                                       [(string-equal("cheese" topping)) 9]
                                       [(string-equal("chicken" topping)) 11.25]
                                       [(string-equal("broccoli" topping)) 10.25]
-                                      [else 1000000])
-                         #:show-body? '(cond (#f #f) #f #f #f #f)
+                                      [otherwise 1000000])
+                         #:show-body? '(cond (#f #f) #f #f #f (#f #f))
                          #:grid-lines? #t
                          )
