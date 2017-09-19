@@ -1,0 +1,23 @@
+language: python
+sudo: required
+python:
+- '3.4'
+branches:
+  only:
+  - auto-build
+env:
+  global:
+  - GH_REF: github.com/brownplt/pyret-docs.git
+  - RACKET_DIR: "~/racket"
+  - RACKET_VERSION: '6.5'
+before_install:
+  - git clone https://github.com/greghendershott/travis-racket.git
+  - cat travis-racket/install-racket.sh | bash
+  - export PATH="${RACKET_DIR}/bin:${PATH}"
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_osx-cocoa-x86-64.pkg ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo installer -pkg wkhtmltox-0.12.3_osx-cocoa-x86-64.pkg -target / ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo rm wkhtmltox-0.12.3_osx-cocoa-x86-64.pkg ; fi
+os:
+  - osx
+script:
+  - bash build-distrib-gen-pdf
